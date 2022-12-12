@@ -14,12 +14,16 @@ public class Player : MonoBehaviour
     private float z;
     private Animator animator;
     private bool IsAttack = false;
+
+    [SerializeField] GameObject attackObj;
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         defspeed = speed;
+
+        // attackObj.SetActive(false);
     }
 
     // Update is called once per frame
@@ -43,6 +47,7 @@ public class Player : MonoBehaviour
         {
 
             animator.SetTrigger("attack");
+            //attackObj.SetActive(true);
             IsAttack = true;
 
             return;
@@ -70,6 +75,16 @@ public class Player : MonoBehaviour
                 Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * 10f);
         }
 
+
+    }
+
+    void OnCollisionEnter(Collision col)
+    {
+
+        if (col.gameObject.tag == "enemy")
+        {
+            Destroy(col.gameObject);
+        }
 
     }
 
