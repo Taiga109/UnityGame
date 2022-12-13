@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
 
@@ -15,10 +17,17 @@ public class Player : MonoBehaviour
     private Animator animator;
     private bool IsAttack = false;
 
+    public int MaxHp = 100;
+    public int currentHp;
+
+    public Slider slider;
+
     [SerializeField] Collider AttackCol;
     // Start is called before the first frame update
     void Start()
     {
+        slider.value = 1;
+        currentHp = MaxHp;
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         defspeed = speed;
@@ -31,7 +40,7 @@ public class Player : MonoBehaviour
     {
         if (animator.GetCurrentAnimatorStateInfo(0).IsTag("attack"))
         {
-            
+
             rb.velocity = new Vector3(0, 0, 0);
             return;
         }
@@ -77,8 +86,26 @@ public class Player : MonoBehaviour
                 Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * 10f);
         }
 
+        if (currentHp < 0)
+        {
+            SceneManager.LoadScene("GameOver");
+        }
 
     }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("enemy"))
+        {
+            int damage = Random.Range(10, 50);
+
+            currentHp = currentHp - damage;
+
+            slider.value = (float)currentHp / (float)MaxHp;
+        }
+    }
+
+
+
     private void ColliderOff()
     {
         AttackCol.enabled = false;
