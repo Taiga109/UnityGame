@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
     private Animator animator;
     private bool IsAttack = false;
 
-    [SerializeField] GameObject attackObj;
+    [SerializeField] Collider AttackCol;
     // Start is called before the first frame update
     void Start()
     {
@@ -31,6 +31,7 @@ public class Player : MonoBehaviour
     {
         if (animator.GetCurrentAnimatorStateInfo(0).IsTag("attack"))
         {
+            
             rb.velocity = new Vector3(0, 0, 0);
             return;
         }
@@ -47,7 +48,8 @@ public class Player : MonoBehaviour
         {
 
             animator.SetTrigger("attack");
-            //attackObj.SetActive(true);
+            AttackCol.enabled = true;
+            Invoke("ColliderOff", 0.5f);
             IsAttack = true;
 
             return;
@@ -77,16 +79,11 @@ public class Player : MonoBehaviour
 
 
     }
-
-    void OnCollisionEnter(Collision col)
+    private void ColliderOff()
     {
-
-        if (col.gameObject.tag == "enemy")
-        {
-            Destroy(col.gameObject);
-        }
-
+        AttackCol.enabled = false;
     }
+
 
     void FixedUpdate()
     {
