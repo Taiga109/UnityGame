@@ -19,10 +19,10 @@ public class PlayerAttack : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
        
-            if (other.gameObject.tag == "enemy")
-            {
-                Destroy(other.gameObject);
-            }
+            //if (other.gameObject.tag == "enemy")
+            //{
+            //    Destroy(other.gameObject);
+            //}
       
     }
     //void OnCollisionEnter(Collision col)
