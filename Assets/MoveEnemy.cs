@@ -18,7 +18,7 @@ public class MoveEnemy : MonoBehaviour
     public Transform enemypos;
     private int currentRoot;
     public float speed;
-   
+    bool flag = false;
     NavMeshAgent agent;
     void Start()
     {
@@ -66,8 +66,25 @@ public class MoveEnemy : MonoBehaviour
                   
                 break;
             case 1:
-                agent.isStopped = false;
+               
                 agent.destination = playerpos.transform.position;
+                if(flag)
+                {
+                    agent.isStopped = true;
+                    //‘Ò‚¿ŽžŠÔ‚ð”‚¦‚é
+                    time += Time.deltaTime;
+
+                    //‘Ò‚¿ŽžŠÔ‚ªÝ’è‚³‚ê‚½”’l‚ð’´‚¦‚é‚Æ”­“®
+                    if (time > waitTime)
+                    {
+                        flag = false;
+                        time = 0;
+                    }
+                }
+                else
+                {
+                    agent.isStopped = false;
+                }
                 break;
         }
        
@@ -100,17 +117,11 @@ public class MoveEnemy : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
+       
+       
         if (collision.gameObject.CompareTag("Player"))
         {
-            agent.isStopped = true;
-            //‘Ò‚¿ŽžŠÔ‚ð”‚¦‚é
-            time += Time.deltaTime;
-
-            //‘Ò‚¿ŽžŠÔ‚ªÝ’è‚³‚ê‚½”’l‚ð’´‚¦‚é‚Æ”­“®
-            if (time > waitTime)
-            {
-                time = 0;
-            }
+            flag = true;
         }
     }
 }
