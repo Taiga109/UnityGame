@@ -4,9 +4,10 @@ using UnityEngine;
 
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Threading.Tasks;
 public class Player : MonoBehaviour
 {
-
+  //  public GameObject fadeCanvas;
     public float speed = 4.0f;
     private float defspeed;
     public float power = 6.0f;
@@ -19,10 +20,13 @@ public class Player : MonoBehaviour
 
     public int MaxHp = 100;
     public int currentHp;
-
+    private  string NextScene;
     public Slider slider;
 
-    [SerializeField] Collider AttackCol;
+    [SerializeField] Collider R_Hand_AttackCol;
+    [SerializeField] Collider L_Hand_AttackCol;
+    [SerializeField] Collider R_Leg_AttackCol;
+    [SerializeField] Collider L_Leg_AttackCol;
     // Start is called before the first frame update
     void Start()
     {
@@ -33,14 +37,58 @@ public class Player : MonoBehaviour
         defspeed = speed;
 
         // attackObj.SetActive(false);
+        //if (!FadeManager.isFadeInstance)
+        //{
+        //    Instantiate(fadeCanvas);
+        //}
+        //Invoke("findFadeObject", 0.02f);
     }
+    //void findFadeObject()
+    //{
+    //    fadeCanvas = GameObject.FindGameObjectWithTag("Fade");
+    //    fadeCanvas.GetComponent<FadeManager>().fadeIn();
+    //}
 
+    //public async void ChangeScene(string nextScene)
+    //{
+    //    fadeCanvas.GetComponent<FadeManager>().fadeOut();
+    //    await Task.Delay(200);
+    //    SceneManager.LoadScene(nextScene);
+    //}
     // Update is called once per frame
     void Update()
     {
+     
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("enemy"))
+        {
+            int damage = Random.Range(10, 50);
+
+            currentHp = currentHp - damage;
+
+            slider.value = (float)currentHp / (float)MaxHp;
+        }
+    }
+
+
+
+    private void ColliderOff()
+    {
+        R_Hand_AttackCol.enabled = false;
+        L_Hand_AttackCol.enabled = false;
+
+        R_Leg_AttackCol.enabled = false;
+        L_Leg_AttackCol.enabled = false;
+
+    }
+
+
+    void FixedUpdate()
+    {
         if (animator.GetCurrentAnimatorStateInfo(0).IsTag("attack"))
         {
-
             rb.velocity = new Vector3(0, 0, 0);
             return;
         }
@@ -57,7 +105,18 @@ public class Player : MonoBehaviour
         {
 
             animator.SetTrigger("attack");
-            AttackCol.enabled = true;
+            R_Hand_AttackCol.enabled = true;
+            Invoke("ColliderOff", 0.5f);
+            IsAttack = true;
+
+            return;
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+
+            animator.SetTrigger("attack_2");
+            R_Hand_AttackCol.enabled = true;
             Invoke("ColliderOff", 0.5f);
             IsAttack = true;
 
@@ -77,7 +136,8 @@ public class Player : MonoBehaviour
         }
 
 
-        rb.velocity = new Vector3(x, 0, z) * speed;
+        rb.velocity = dir * speed;
+        //transform.Translate((dir * speed));
         animator.SetFloat("run", rb.velocity.magnitude);
         if (dir.magnitude > 0.1)
         {
@@ -86,34 +146,12 @@ public class Player : MonoBehaviour
                 Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * 10f);
         }
 
+
         if (currentHp < 0)
         {
-            SceneManager.LoadScene("GameOver");
+
+            NextScene = "GameOver";
+            // ChangeScene(NextScene);
         }
-
-    }
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("enemy"))
-        {
-            int damage = Random.Range(10, 50);
-
-            currentHp = currentHp - damage;
-
-            slider.value = (float)currentHp / (float)MaxHp;
-        }
-    }
-
-
-
-    private void ColliderOff()
-    {
-        AttackCol.enabled = false;
-    }
-
-
-    void FixedUpdate()
-    {
-
     }
 }

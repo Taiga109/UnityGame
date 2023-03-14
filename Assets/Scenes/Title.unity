@@ -306,6 +306,7 @@ GameObject:
   - component: {fileID: 963194228}
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
+  - component: {fileID: 963194229}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -378,6 +379,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &963194229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fda762d609f17f4a8926f876230074d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fadeCanvas: {fileID: 1732887882517882181, guid: 3218a7d908e160d46ad9f60d23492b27, type: 3}
+  NextScene: Main
 --- !u!1 &1118452679
 GameObject:
   m_ObjectHideFlags: 0
@@ -394,7 +409,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1118452680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -407,7 +422,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69a6431be6371b449b178ac7aac1ceb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NextScene: Main
 --- !u!4 &1118452681
 Transform:
   m_ObjectHideFlags: 0

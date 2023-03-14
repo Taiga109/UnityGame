@@ -9,7 +9,7 @@ public class EnemyStatus : MonoBehaviour
     private int maxHp = 100;
     //敵の攻撃力
     [SerializeField]
-    private int attackPower = 1;
+  //  private int attackPower = 1;
     private int currentHp;
   
     //　HP表示用スライダー
