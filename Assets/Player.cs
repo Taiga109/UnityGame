@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using System.Threading.Tasks;
 public class Player : MonoBehaviour
 {
-  //  public GameObject fadeCanvas;
+    //  public GameObject fadeCanvas;
     public float speed = 4.0f;
     private float defspeed;
     public float power = 6.0f;
@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
 
     public int MaxHp = 100;
     public int currentHp;
-    private  string NextScene;
+    private string NextScene;
     public Slider slider;
 
     [SerializeField] Collider R_Hand_AttackCol;
@@ -58,17 +58,27 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-     
+
     }
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("enemy"))
         {
-            int damage = Random.Range(10, 50);
+            int damage = Random.Range(10, 20);
 
             currentHp = currentHp - damage;
 
             slider.value = (float)currentHp / (float)MaxHp;
+        }
+
+        if (collision.gameObject.CompareTag("Bullet"))
+        {
+            int damage = 5;
+
+            currentHp = currentHp - damage;
+
+            slider.value = (float)currentHp / (float)MaxHp;
+            Destroy(collision.gameObject);
         }
     }
 
@@ -84,7 +94,10 @@ public class Player : MonoBehaviour
 
     }
 
-
+    public int GetCurrentHp()
+    {
+        return currentHp;
+    }
     void FixedUpdate()
     {
         if (animator.GetCurrentAnimatorStateInfo(0).IsTag("attack"))
@@ -151,7 +164,8 @@ public class Player : MonoBehaviour
         {
 
             NextScene = "GameOver";
-            // ChangeScene(NextScene);
+            //ChangeScene(NextScene);
+            SceneManager.LoadScene(NextScene);
         }
     }
 }

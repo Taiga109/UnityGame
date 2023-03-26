@@ -8,6 +8,8 @@ TagManager:
   - enemy
   - Player_Attack
   - Fade
+  - Bullet_enemy
+  - Bullet
   layers:
   - Default
   - TransparentFX
@@ -15,8 +17,8 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
+  - Enemy_Bullet
+  - Enemy
   - 
   - 
   - 

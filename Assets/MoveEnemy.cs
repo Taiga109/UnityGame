@@ -11,7 +11,7 @@ public class MoveEnemy : MonoBehaviour
     [SerializeField] public Transform playerpos;
 
     [SerializeField] float waitTime = 2;
-   
+
     [SerializeField] float time = 0;
     //public Vector3[] movepoints = new Vector3[3];
     private int Mode;
@@ -20,10 +20,12 @@ public class MoveEnemy : MonoBehaviour
     public float speed;
     bool flag = false;
     NavMeshAgent agent;
+    // [SerializeField] private GameObject thisObject;
+
     void Start()
     {
         //speed = 0.05f;
-      
+
         agent = GetComponent<NavMeshAgent>();
 
     }
@@ -32,23 +34,36 @@ public class MoveEnemy : MonoBehaviour
     void Update()
     {
         //Vector3 pos = movepoints[currentRoot];
-        float distance=Vector3.Distance(enemypos.position, playerpos.transform.position);
+        float distance = Vector3.Distance(enemypos.position, playerpos.transform.position);
+        Vector3 direction = (transform.position - playerpos.transform.position).normalized;
+        direction.y = 0;
+        
         if (distance > 5.0f)
         {
             Mode = 0;
             GetComponent<Renderer>().material.color = Color.white;
+          
         }
         else if (distance < 5.0f)
         {
-            Mode = 1;
-            //agent.speed = 0;
-            
-            GetComponent<Renderer>().material.color = Color.red;
+            if (this.gameObject.CompareTag("enemy"))
+            {
+                Mode = 1;
+            }
+
+            else if (Mode == 0 && this.gameObject.CompareTag("Bullet_enemy"))
+            {
+                Mode = 2;
+            }
+
+
+
             //agent.destination = playerpos.position;
             //agent.speed = speed;
         }
 
-        switch (Mode){
+        switch (Mode)
+        {
             case 0:
                 //if (Vector3.Distance(transform.position, pos) < 1f)
                 //{//Ç‡ÇµìGÇÃà íuÇ∆åªç›ÇÃñ⁄ìIínÇ∆ÇÃãóó£Ç™1à»â∫Ç»ÇÁ
@@ -63,12 +78,12 @@ public class MoveEnemy : MonoBehaviour
                 {
                     StopHere();
                 }
-                  
+
                 break;
             case 1:
-               
+                GetComponent<Renderer>().material.color = Color.red;
                 agent.destination = playerpos.transform.position;
-                if(flag)
+                if (flag)
                 {
                     agent.isStopped = true;
                     //ë“Çøéûä‘ÇêîÇ¶ÇÈ
@@ -85,9 +100,22 @@ public class MoveEnemy : MonoBehaviour
                 {
                     agent.isStopped = false;
                 }
+
+                //if (GameObject.FindWithTag("Bullet_enemy"))
+                //{
+
+                //}
+                break;
+            case 2:
+                GetComponent<Renderer>().material.color = Color.blue;
+                if (distance < 4.0f)
+                {
+                    direction = (transform.position - playerpos.transform.position).normalized;
+                    agent.destination = transform.position + direction * Moveradius;
+                }
                 break;
         }
-       
+
     }
     void GetNextPoint()
     {
@@ -117,8 +145,8 @@ public class MoveEnemy : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-       
-       
+
+
         if (collision.gameObject.CompareTag("Player"))
         {
             flag = true;
