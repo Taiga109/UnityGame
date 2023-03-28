@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,7 +6,7 @@ public class HPberUIRote : MonoBehaviour
 {
     void LateUpdate()
     {
-        //@ƒJƒƒ‰‚Æ“¯‚¶Œü‚«‚Éİ’è
+        //ï¿½@ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Æ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Éİ’ï¿½
        // transform.rotation = Camera.main.transform.rotation;
     }
 }

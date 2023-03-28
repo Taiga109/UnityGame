@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -16,6 +16,8 @@ public class MoveEnemy : MonoBehaviour
     //public Vector3[] movepoints = new Vector3[3];
     private int Mode;
     public Transform enemypos;
+    private Animator animator;
+   
     private int currentRoot;
     public float speed;
     bool flag = false;
@@ -27,7 +29,8 @@ public class MoveEnemy : MonoBehaviour
         //speed = 0.05f;
 
         agent = GetComponent<NavMeshAgent>();
-
+        
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -37,12 +40,18 @@ public class MoveEnemy : MonoBehaviour
         float distance = Vector3.Distance(enemypos.position, playerpos.transform.position);
         Vector3 direction = (transform.position - playerpos.transform.position).normalized;
         direction.y = 0;
-        
+
+       
+
+        animator.SetFloat("move", agent.velocity.sqrMagnitude);
+
+
+
         if (distance > 5.0f)
         {
             Mode = 0;
-            GetComponent<Renderer>().material.color = Color.white;
-          
+            //GetComponent<Renderer>().material.color = Color.white;
+
         }
         else if (distance < 5.0f)
         {
@@ -65,31 +74,26 @@ public class MoveEnemy : MonoBehaviour
         switch (Mode)
         {
             case 0:
-                //if (Vector3.Distance(transform.position, pos) < 1f)
-                //{//‚à‚µ“G‚ÌˆÊ’u‚ÆŒ»İ‚Ì–Ú“I’n‚Æ‚Ì‹——£‚ª1ˆÈ‰º‚È‚ç
-                //    currentRoot += 1;//currentRoot‚ğ+1‚·‚é
-                //    if (currentRoot > movepoints.Length - 1)
-                //    {//‚à‚µcurrentRoot‚ªwayPoints‚Ì—v‘f”-1‚æ‚è‘å‚«‚¢‚È‚ç
-                //        currentRoot = 0;//currentRoot‚ğ0‚É‚·‚é
-                //    }
-                //}
-                //agent.SetDestination(pos);//NavMeshAgent‚Ìî•ñ‚ğæ“¾‚µ–Ú“I’n‚ğpos‚É‚·‚é
+             
+                
                 if (!agent.pathPending && agent.remainingDistance < 0.5f)
                 {
                     StopHere();
                 }
-
+              
                 break;
             case 1:
-                GetComponent<Renderer>().material.color = Color.red;
+               // transform.LookAt(agent.destination);
                 agent.destination = playerpos.transform.position;
+
                 if (flag)
                 {
+                    animator.SetTrigger("Attack");
                     agent.isStopped = true;
-                    //‘Ò‚¿ŠÔ‚ğ”‚¦‚é
+                    //å¾…ã¡æ™‚é–“ã‚’æ•°ãˆã‚‹
                     time += Time.deltaTime;
 
-                    //‘Ò‚¿ŠÔ‚ªİ’è‚³‚ê‚½”’l‚ğ’´‚¦‚é‚Æ”­“®
+                    //å¾…ã¡æ™‚é–“ãŒè¨­å®šã•ã‚ŒãŸæ•°å€¤ã‚’è¶…ãˆã‚‹ã¨ç™ºå‹•
                     if (time > waitTime)
                     {
                         flag = false;
@@ -107,11 +111,17 @@ public class MoveEnemy : MonoBehaviour
                 //}
                 break;
             case 2:
-                GetComponent<Renderer>().material.color = Color.blue;
+                // GetComponent<Renderer>().material.color = Color.blue;
                 if (distance < 4.0f)
                 {
                     direction = (transform.position - playerpos.transform.position).normalized;
                     agent.destination = transform.position + direction * Moveradius;
+                    transform.LookAt(agent.destination);
+
+                }
+                else if (distance > 4.5)
+                {
+                    Mode = 0;
                 }
                 break;
         }
@@ -130,15 +140,15 @@ public class MoveEnemy : MonoBehaviour
 
     void StopHere()
     {
-        //NavMeshAgent‚ğ~‚ß‚é
+        //NavMeshAgentã‚’æ­¢ã‚ã‚‹
         agent.isStopped = true;
-        //‘Ò‚¿ŠÔ‚ğ”‚¦‚é
+        //å¾…ã¡æ™‚é–“ã‚’æ•°ãˆã‚‹
         time += Time.deltaTime;
 
-        //‘Ò‚¿ŠÔ‚ªİ’è‚³‚ê‚½”’l‚ğ’´‚¦‚é‚Æ”­“®
+        //å¾…ã¡æ™‚é–“ãŒè¨­å®šã•ã‚ŒãŸæ•°å€¤ã‚’è¶…ãˆã‚‹ã¨ç™ºå‹•
         if (time > waitTime)
         {
-            //–Ú•W’n“_‚ğİ’è‚µ’¼‚·
+            //ç›®æ¨™åœ°ç‚¹ã‚’è¨­å®šã—ç›´ã™
             GetNextPoint();
             time = 0;
         }
@@ -149,6 +159,7 @@ public class MoveEnemy : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Player"))
         {
+            
             flag = true;
         }
     }

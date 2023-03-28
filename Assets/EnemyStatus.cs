@@ -1,18 +1,18 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 using UnityEngine.UI;
 public class EnemyStatus : MonoBehaviour
-{   //“G‚ÌMaxHP
+{   //ï¿½Gï¿½ï¿½MaxHP
     [SerializeField]
     private int maxHp = 100;
-    //“G‚ÌUŒ‚—Í
+    //ï¿½Gï¿½ÌUï¿½ï¿½ï¿½ï¿½
     [SerializeField]
   //  private int attackPower = 1;
     private int currentHp;
   
-    //@HP•\¦—pƒXƒ‰ƒCƒ_[
+    //ï¿½@HPï¿½\ï¿½ï¿½ï¿½pï¿½Xï¿½ï¿½ï¿½Cï¿½_ï¿½[
     public Slider slider;
     public enum EnemyState
     {
