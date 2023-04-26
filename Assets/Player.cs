@@ -23,6 +23,8 @@ public class Player : MonoBehaviour
     private string NextScene;
     public Slider slider;
 
+    CapsuleCollider PlayerCollision;
+
     [SerializeField] Collider R_Hand_AttackCol;
     [SerializeField] Collider L_Hand_AttackCol;
     [SerializeField] Collider R_Leg_AttackCol;
@@ -36,6 +38,7 @@ public class Player : MonoBehaviour
         animator = GetComponent<Animator>();
         defspeed = speed;
 
+        PlayerCollision = GetComponent<CapsuleCollider>();
         // attackObj.SetActive(false);
         //if (!FadeManager.isFadeInstance)
         //{
@@ -62,27 +65,47 @@ public class Player : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("enemy"))
+        if (PlayerCollision.enabled == true)
         {
-            int damage = Random.Range(10, 20);
+            if (collision.gameObject.CompareTag("enemy"))
+            {
+                int damage = Random.Range(5, 10);
 
-            currentHp = currentHp - damage;
+                currentHp = currentHp - damage;
 
-            slider.value = (float)currentHp / (float)MaxHp;
+                slider.value = (float)currentHp / (float)MaxHp;
+            }
+
+            if (collision.gameObject.CompareTag("Bullet"))
+            {
+                int damage = 5;
+
+                currentHp = currentHp - damage;
+
+                slider.value = (float)currentHp / (float)MaxHp;
+               
+            }
         }
-
         if (collision.gameObject.CompareTag("Bullet"))
         {
-            int damage = 5;
-
-            currentHp = currentHp - damage;
-
-            slider.value = (float)currentHp / (float)MaxHp;
             Destroy(collision.gameObject);
         }
+
+
     }
 
-
+    private void Rolling()
+    {
+        if(animator.GetCurrentAnimatorStateInfo(0).IsName("Roll"))
+        {
+            PlayerCollision.enabled = false;
+        }
+        else
+        {
+            PlayerCollision.enabled = true;
+        }
+       
+    }
 
     private void ColliderOff()
     {
@@ -100,6 +123,8 @@ public class Player : MonoBehaviour
     }
     void FixedUpdate()
     {
+        Rolling();
+
         if (animator.GetCurrentAnimatorStateInfo(0).IsTag("attack"))
         {
             rb.velocity = new Vector3(0, 0, 0);
@@ -112,6 +137,11 @@ public class Player : MonoBehaviour
         if (IsAttack)
         {
             return;
+        }
+
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            animator.SetTrigger("Roll");
         }
 
         if (Input.GetMouseButtonDown(0))

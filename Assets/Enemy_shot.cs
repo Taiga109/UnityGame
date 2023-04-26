@@ -8,10 +8,14 @@ public class Enemy_shot : MonoBehaviour
 
     private int count;
     [SerializeField] int shot_time;
-    [SerializeField] public Transform playerpos;
+   // [SerializeField] public Transform playerpos;
+
+    private Vector3 playerpos;
+    GameObject Player;
     // Start is called before the first frame update
     void Start()
     {
+        Player = GameObject.FindWithTag("Player");
         if (shot_time <= 0)
         {
             shot_time = 30;
@@ -22,8 +26,8 @@ public class Enemy_shot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        float distance = Vector3.Distance(transform.position, playerpos.transform.position);
+        playerpos = Player.transform.position;
+        float distance = Vector3.Distance(transform.position, playerpos);
         if (distance > 5.0f)
         {
             count++;
@@ -33,7 +37,7 @@ public class Enemy_shot : MonoBehaviour
                 Rigidbody bulletrb = bullet.GetComponent<Rigidbody>();
                 bulletrb.useGravity = false;
 
-                bullet.transform.LookAt(playerpos.transform.position);
+                bullet.transform.LookAt(playerpos);
                 
                 bulletrb.AddForce(bullet.transform.forward * 10, ForceMode.Impulse);
 

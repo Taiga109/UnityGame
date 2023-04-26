@@ -1,19 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 using UnityEngine.UI;
 public class EnemyStatus : MonoBehaviour
-{   //�G��MaxHP
+{   //敵のMaxHP
     [SerializeField]
     private int maxHp = 100;
     //�G�̍U����
     [SerializeField]
   //  private int attackPower = 1;
-    private int currentHp;
+    public int currentHp;
   
     //�@HP�\���p�X���C�_�[
     public Slider slider;
+
+    private Animator animator;
+
+    MoveEnemy move_enemy;
+    Collider col;
     public enum EnemyState
     {
         Walk,
@@ -27,6 +31,9 @@ public class EnemyStatus : MonoBehaviour
     {
         slider.value = (float)maxHp;
         currentHp = maxHp;
+        animator = GetComponent<Animator>();
+        col = this.gameObject.GetComponent<Collider>();
+  
     }
 
     // Update is called once per frame
@@ -48,7 +55,14 @@ public class EnemyStatus : MonoBehaviour
             slider.value = (float)currentHp / (float)maxHp;
             if (currentHp == 0)
             {
-                Destroy(gameObject, 0f);
+                this.GetComponent<MoveEnemy>().enabled=false;
+                col.enabled = false;
+                if(this.gameObject.CompareTag("Bullet_enemy"))
+                {
+                    this.GetComponent<Enemy_shot>().enabled = false;
+                }
+                animator.SetTrigger("Dead");
+                Destroy(gameObject, 5f);
             }
         }
     }

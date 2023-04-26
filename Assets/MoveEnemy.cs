@@ -8,7 +8,7 @@ public class MoveEnemy : MonoBehaviour
     // Start is called before the first frame update
     [SerializeField] float Moveradius = 3;
 
-    [SerializeField] public Transform playerpos;
+    private Vector3 playerpos;
 
     [SerializeField] float waitTime = 2;
 
@@ -17,11 +17,13 @@ public class MoveEnemy : MonoBehaviour
     private int Mode;
     public Transform enemypos;
     private Animator animator;
-   
+
     private int currentRoot;
     public float speed;
     bool flag = false;
     NavMeshAgent agent;
+
+    GameObject Player;
     // [SerializeField] private GameObject thisObject;
 
     void Start()
@@ -29,19 +31,20 @@ public class MoveEnemy : MonoBehaviour
         //speed = 0.05f;
 
         agent = GetComponent<NavMeshAgent>();
-        
+        Player = GameObject.FindWithTag("Player");
         animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        playerpos = Player.transform.position;
         //Vector3 pos = movepoints[currentRoot];
-        float distance = Vector3.Distance(enemypos.position, playerpos.transform.position);
-        Vector3 direction = (transform.position - playerpos.transform.position).normalized;
+        float distance = Vector3.Distance(enemypos.position, playerpos);
+        Vector3 direction = (transform.position - playerpos).normalized;
         direction.y = 0;
 
-       
+
 
         animator.SetFloat("move", agent.velocity.sqrMagnitude);
 
@@ -51,6 +54,7 @@ public class MoveEnemy : MonoBehaviour
         {
             Mode = 0;
             //GetComponent<Renderer>().material.color = Color.white;
+            //return;
 
         }
         else if (distance < 5.0f)
@@ -58,15 +62,16 @@ public class MoveEnemy : MonoBehaviour
             if (this.gameObject.CompareTag("enemy"))
             {
                 Mode = 1;
+
             }
 
             else if (Mode == 0 && this.gameObject.CompareTag("Bullet_enemy"))
             {
                 Mode = 2;
+
             }
 
-
-
+           
             //agent.destination = playerpos.position;
             //agent.speed = speed;
         }
@@ -74,21 +79,21 @@ public class MoveEnemy : MonoBehaviour
         switch (Mode)
         {
             case 0:
-             
-                
+
+
                 if (!agent.pathPending && agent.remainingDistance < 0.5f)
                 {
                     StopHere();
+
                 }
-              
+
                 break;
             case 1:
-               // transform.LookAt(agent.destination);
-                agent.destination = playerpos.transform.position;
+                // transform.LookAt(agent.destination);
+                agent.destination = playerpos;
 
                 if (flag)
                 {
-                    animator.SetTrigger("Attack");
                     agent.isStopped = true;
                     //待ち時間を数える
                     time += Time.deltaTime;
@@ -114,7 +119,7 @@ public class MoveEnemy : MonoBehaviour
                 // GetComponent<Renderer>().material.color = Color.blue;
                 if (distance < 4.0f)
                 {
-                    direction = (transform.position - playerpos.transform.position).normalized;
+                    direction = (transform.position - playerpos).normalized;
                     agent.destination = transform.position + direction * Moveradius;
                     transform.LookAt(agent.destination);
 
@@ -159,7 +164,7 @@ public class MoveEnemy : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Player"))
         {
-            
+            animator.SetTrigger("Attack");
             flag = true;
         }
     }
