@@ -8,13 +8,15 @@ public class EnemyStatus : MonoBehaviour
     private int maxHp = 100;
     //�G�̍U����
     [SerializeField]
-  //  private int attackPower = 1;
+    //  private int attackPower = 1;
     public int currentHp;
-  
+
     //�@HP�\���p�X���C�_�[
     public Slider slider;
 
     private Animator animator;
+
+    private EnemyManager enemyManager;
 
     MoveEnemy move_enemy;
     Collider col;
@@ -33,13 +35,17 @@ public class EnemyStatus : MonoBehaviour
         currentHp = maxHp;
         animator = GetComponent<Animator>();
         col = this.gameObject.GetComponent<Collider>();
-  
+        GameObject EnemyManagerObj = GameObject.Find("EnemyManager");
+        enemyManager = EnemyManagerObj.GetComponent<EnemyManager>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
         slider.transform.rotation = Camera.main.transform.rotation;
+
+       
     }
     void OnCollisionEnter(Collision collision)
     {
@@ -55,13 +61,14 @@ public class EnemyStatus : MonoBehaviour
             slider.value = (float)currentHp / (float)maxHp;
             if (currentHp == 0)
             {
-                this.GetComponent<MoveEnemy>().enabled=false;
+                this.GetComponent<MoveEnemy>().enabled = false;
                 col.enabled = false;
-                if(this.gameObject.CompareTag("Bullet_enemy"))
+                if (this.gameObject.CompareTag("Bullet_enemy"))
                 {
                     this.GetComponent<Enemy_shot>().enabled = false;
                 }
                 animator.SetTrigger("Dead");
+                enemyManager.EnemyDeathCount += 1;
                 Destroy(gameObject, 5f);
             }
         }

@@ -149,9 +149,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 115319678}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69a6431be6371b449b178ac7aac1ceb8, type: 3}
+  m_Script: {fileID: 11500000, guid: 6fda762d609f17f4a8926f876230074d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fadeCanvas: {fileID: 1732887882517882181, guid: 3218a7d908e160d46ad9f60d23492b27, type: 3}
   NextScene: Title
 --- !u!4 &115319680
 Transform:

@@ -18,6 +18,9 @@ public class Player : MonoBehaviour
     private Animator animator;
     private bool IsAttack = false;
 
+    public bool CD = false;
+    public float CDcount = 0;
+
     public int MaxHp = 100;
     public int currentHp;
     private string NextScene;
@@ -83,7 +86,7 @@ public class Player : MonoBehaviour
                 currentHp = currentHp - damage;
 
                 slider.value = (float)currentHp / (float)MaxHp;
-               
+
             }
         }
         if (collision.gameObject.CompareTag("Bullet"))
@@ -96,15 +99,24 @@ public class Player : MonoBehaviour
 
     private void Rolling()
     {
-        if(animator.GetCurrentAnimatorStateInfo(0).IsName("Roll"))
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Roll"))
         {
             PlayerCollision.enabled = false;
         }
         else
         {
             PlayerCollision.enabled = true;
+
+
         }
-       
+        if (CD) { CDcount++; }
+
+        if (CDcount > 40)
+        {
+            CD = false;
+            CDcount = 0;
+        }
     }
 
     private void ColliderOff()
@@ -139,9 +151,15 @@ public class Player : MonoBehaviour
             return;
         }
 
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            animator.SetTrigger("Roll");
+            if (CD == false)
+            {
+                animator.SetTrigger("Roll");
+                CD = true;
+            }
+
+
         }
 
         if (Input.GetMouseButtonDown(0))
